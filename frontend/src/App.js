@@ -1,5 +1,9 @@
 import React from "react";
 import axios from "axios";
+import InputAutocomplete from "./components/InputAutocomplete";
+import TableData from "./components/TableData";
+import TableHead from "./components/TableHead";
+import Button from "./components/Button";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +19,7 @@ class App extends React.Component {
 
   componentDidMount() {
     axios.get("http://localhost:8080/api/").then((res) => {
-      console.log("bullllllllll");
+      console.log("componentDidMount() called");
       console.log(res.data);
       this.setState({
         users: res.data,
@@ -53,7 +57,7 @@ class App extends React.Component {
     }
   }
 
-  edit(id) {
+  edit = async (id) => {
     axios.get(`http://localhost:8080/api/${id}`).then((res) => {
       this.setState({
         id: res.data.id,
@@ -61,15 +65,25 @@ class App extends React.Component {
         email: res.data.email,
         password: res.data.password,
       });
-      //this.componentDidMount();
     });
-  }
+  };
 
-  delete(id) {
-    axios.delete(`http://localhost:8080/api/${id}`).then((res) => {
-      this.componentDidMount();
-    });
-  }
+  delete = async (id) => {
+    await axios.delete(`http://localhost:8080/api/${id}`);
+    this.componentDidMount();
+  };
+
+  updateName = (name) => {
+    this.setState({ name: name });
+  };
+
+  updateEmail = (email) => {
+    this.setState({ email: email });
+  };
+
+  updatePassword = (password) => {
+    this.setState({ password: password });
+  };
 
   render() {
     return (
@@ -81,104 +95,57 @@ class App extends React.Component {
                 this.submit(e, this.state.id);
               }}
             >
-              <div class="input-field col s12">
-                <i class="material-icons prefix">person</i>
-                <input
+              <div className="input-field col s12">
+                <InputAutocomplete
+                  id="inputName"
                   type="text"
-                  id="autocomplete-input-person"
-                  class="autocomplete"
-                  onChange={(e) => {
-                    this.setState({ name: e.target.value });
-                  }}
+                  iconName="person"
+                  labelName="Name"
+                  updateValue={this.updateName}
                   value={this.state.name}
                 />
-                <label for="autocomplete-input-person">Name</label>
               </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">email</i>
-                <input
+              <div className="input-field col s12">
+                <InputAutocomplete
+                  id="inputEmail"
                   type="email"
-                  id="autocomplete-input-email"
-                  class="autocomplete"
-                  onChange={(e) => {
-                    this.setState({ email: e.target.value });
-                  }}
+                  iconName="email"
+                  labelName="e-mail"
+                  updateValue={this.updateEmail}
                   value={this.state.email}
                 />
-                <label for="autocomplete-input-email">e-mail</label>
               </div>
-              <div class="input-field col s12">
-                <i class="material-icons prefix">vpn_key</i>
-                <input
+              <div className="input-field col s12">
+                <InputAutocomplete
+                  id="inputPassword"
                   type="password"
-                  id="autocomplete-input-password"
-                  class="autocomplete"
-                  onChange={(e) => {
-                    this.setState({ password: e.target.value });
-                  }}
+                  iconName="vpn_key"
+                  labelName="password"
+                  updateValue={this.updatePassword}
                   value={this.state.password}
                 />
-                <label for="autocomplete-input-password">password</label>
               </div>
               <div class="input-field col s12">
-                <button
-                  class="btn waves-effect waves-light right"
-                  type="submit"
-                  name="action"
-                >
-                  Submit
-                  <i class="material-icons right">send</i>
-                </button>
+                <Button
+                  btnName="Submit"
+                  icon="send"
+                  btnPosition="right"
+                  iconBtnPosition="right"
+                />
               </div>
             </form>
           </div>
           <div className="col s6">
             <table>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Password</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
+              <TableHead
+                columns={["Name", "Email", "Password", "Edit", "Delete"]}
+              />
               <tbody>
-                {this.state.users.map((user) => {
-                  return (
-                    <tr key={user.id}>
-                      <td>{user.id}</td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.password}</td>
-                      <td>
-                        <button
-                          onClick={(e) => {
-                            this.edit(user.id);
-                          }}
-                          class="btn waves-effect waves-light"
-                          type="submit"
-                          name="action"
-                        >
-                          <i class="material-icons">edit</i>
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          onClick={(e) => {
-                            this.delete(user.id);
-                          }}
-                          class="btn waves-effect waves-light"
-                          type="submit"
-                          name="action"
-                        >
-                          <i class="material-icons">delete</i>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                <TableData
+                  list={this.state.users}
+                  edit={this.edit}
+                  delete={this.delete}
+                />
               </tbody>
             </table>
           </div>

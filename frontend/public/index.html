@@ -9,26 +9,25 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
 
-    <title>React App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <title>User</title>
   </head>
   <body>
-    <nav>
-      <div class="nav-wrapper">
-        <a href="#" class="brand-logo">Admin</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a href="#">Menu 1</a></li>
-          <li><a href="#">Menu 2</a></li>
-          <li><a href="#">Menu 3</a></li>
-        </ul>
-      </div>
-    </nav>
-
     <div id="root"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        var textNeedCount = document.querySelectorAll("#comments");
+        M.CharacterCounter.init(textNeedCount);
+
+        var elems = document.querySelector("#selectCountries");
+        M.FormSelect.init(elems);
+      });
+    </script>
   </body>
 </html>
